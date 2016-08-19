@@ -52,19 +52,16 @@ module ActiveUUID
 
       def type_cast(value)
           return UUIDTools::UUID.serialize(value) if type == :uuid
-          # type_cast_without_uuid(value)
           super(value)
         end
 
         def type_cast_code(var_name)
           return "UUIDTools::UUID.serialize(#{var_name})" if type == :uuid
-          # type_cast_code_without_uuid(var_name)
           super(var_name)
         end
 
         def simplified_type(field_type)
           return :uuid if field_type == 'binary(16)' || field_type == 'binary(16,0)'
-          # simplified_type_without_uuid(field_type)
           super(field_type)
         end
 
@@ -100,14 +97,11 @@ module ActiveUUID
 
       def type_cast(value)
         return UUIDTools::UUID.serialize(value) if type == :uuid
-        # type_cast_without_uuid(value)
         super(value)
       end
-        #alias_method_chain :type_cast, :uuid if ActiveRecord::VERSION::MAJOR >= 4
 
       def simplified_type(field_type)
         return :uuid if field_type == 'uuid'
-        # simplified_type_without_pguuid(field_type)
         super(field_type)
       end
     end
