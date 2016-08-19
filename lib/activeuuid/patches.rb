@@ -119,13 +119,23 @@ module ActiveUUID
 
       included do
         def quote_with_visiting(value, column = nil)
-          value = UUIDTools::UUID.serialize(value) if column && column.type == :uuid
-          quote_without_visiting(value, column)
+          if value && value.class == ActiveModel::Type::Binary::Data
+            UUIDTools::UUID.serialize(value)
+            x = value.to_s.delete('-').upcase
+            "x'#{x}'"
+          else
+            quote_without_visiting(value, column)
+          end
         end
 
         def type_cast_with_visiting(value, column = nil)
-          value = UUIDTools::UUID.serialize(value) if column && column.type == :uuid
-          type_cast_without_visiting(value, column)
+          if value && value.class == ActiveModel::Type::Binary::Data
+            UUIDTools::UUID.serialize(value)
+            x = value.to_s.delete('-').upcase
+            "x'#{x}'"
+          else
+            type_cast_without_visiting(value, column)
+          end
         end
 
         def native_database_types_with_uuid
